@@ -30,6 +30,7 @@
 #include "LoadFont.h"
 #include <vector>
 #include "AutumnFunc.h"
+#include "File.h"
 
 size_t font_width;
 size_t font_height;
@@ -566,6 +567,77 @@ void EndTextObject()
 	UnloadFont(font);
 }
 
+static unsigned long color_black;
+
+// Replacement for InitBack() so that we can load pngs
+BOOL InitBack(const char* fName, int type)
+{
+	char path[MAX_PATH];
+	FILE* fp;
+
+	color_black = GetCortBoxColor(RGB(0, 0, 0x10));	// Unused. This may have once been used by background type 4 (the solid black background)
+
+	// Get width and height
+	fp = NULL;
+	const char* bmp_file_extensions[] = { "pbm", "bmp" };
+	for (size_t i = 0; i < sizeof(bmp_file_extensions) / sizeof(bmp_file_extensions[0]) && fp == NULL; ++i)
+	{
+		sprintf(path, "%s\\%s.%s", csvanilla::gDataPath, fName, bmp_file_extensions[i]);
+		fp = fopen(path, "rb");
+	}
+
+	if (fp != NULL)
+	{
+		if (fgetc(fp) != 'B' || fgetc(fp) != 'M')
+		{
+#ifdef FIX_MAJOR_BUGS
+			// The original game forgets to close fp
+			fclose(fp);
+#endif
+			return FALSE;
+		}
+
+		fseek(fp, 18, SEEK_SET);
+
+		csvanilla::gBack.partsW = File_ReadLE32(fp);
+		csvanilla::gBack.partsH = File_ReadLE32(fp);
+		fclose(fp);
+	}
+	else
+	{
+		sprintf(path, "%s\\%s.%s", csvanilla::gDataPath, fName, "png");
+		fp = fopen(path, "rb");
+
+		if (fp == NULL)
+			return FALSE;
+
+		if (fgetc(fp) != 0x89 || fgetc(fp) != 'P' || fgetc(fp) != 'N' || fgetc(fp) != 'G')
+		{
+			fclose(fp);
+			return FALSE;
+		}
+
+		fseek(fp, 16, SEEK_SET);
+
+		csvanilla::gBack.partsW = File_ReadBE32(fp);
+		csvanilla::gBack.partsH = File_ReadBE32(fp);
+		fclose(fp);
+	}
+
+	csvanilla::gBack.partsW /= 1;
+	csvanilla::gBack.partsH /= 1;
+
+	csvanilla::gBack.flag = TRUE;	// This variable is otherwise unused
+
+	// *Now* we actually load the bitmap
+	csvanilla::ReleaseSurface(0x1C);
+	csvanilla::MakeSurface_File(fName, 0x1C);
+
+	csvanilla::gBack.type = type;
+	csvanilla::gWaterY = background_water_level * 0x10 * 0x200;
+	return TRUE;
+}
+
 #define VERIFY(addr) if (!patcher::verifyBytes(0x##addr, origBytes##addr, sizeof origBytes##addr)) return false
 
 // Verify that the memory addresses that we're patching contain the original code
@@ -616,6 +688,7 @@ bool verifyIntegrity()
 		reinterpret_cast<patcher::dword>(csvanilla::PutText),
 		reinterpret_cast<patcher::dword>(csvanilla::PutText2),
 		reinterpret_cast<patcher::dword>(csvanilla::EndTextObject),
+		reinterpret_cast<patcher::dword>(csvanilla::InitBack),
 	};
 	for (patcher::dword func : replacedFunctions)
 		if (!verifyFunctionHeader(func))
@@ -697,6 +770,7 @@ bool applySDLPatches()
 	patcher::replaceFunction(csvanilla::PutText, PutText);
 	patcher::replaceFunction(csvanilla::PutText2, PutText2);
 	patcher::replaceFunction(csvanilla::EndTextObject, EndTextObject);
+	patcher::replaceFunction(csvanilla::InitBack, InitBack);
 
 	return true;
 }

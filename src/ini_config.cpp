@@ -12,6 +12,7 @@ bool enable_60fps = false;
 bool enable_pause_code = false;
 bool enable_font_option = true;
 bool ignore_vanilla_gamepad_setting = true;
+int background_water_level = 240;
 
 void LoadConfig()
 {
@@ -22,6 +23,7 @@ void LoadConfig()
 	enable_60fps = main.GetBoolean("Main", "Enable 60FPS", false);
 	enable_pause_code = main.GetBoolean("Main", "Enable Pause Code", false);
 	ignore_vanilla_gamepad_setting = main.GetBoolean("Main", "Ignore Vanilla Gamepad Setting", true);
+	background_water_level = main.GetInteger("Main", "Background Water Level", 240);
 	enable_font_option = main.GetBoolean("Pause Menu", "Enable Font Option", true);
 
 	printf("Loaded sdl.ini\n");
