@@ -1,0 +1,13 @@
+fonts:
+  - name: DejaVu Sans Mono
+    filename: font
+    x_scaling: 5
+    y_scaling: 10
+  - name: Courier New
+    filename: cour
+    x_scaling: 5
+    y_scaling: 10
+  - name: MS Gothic
+    filename: msgothic
+    x_scaling: 5
+    y_scaling: 10
