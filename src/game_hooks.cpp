@@ -714,8 +714,12 @@ bool applySDLPatches()
 	RegisterSDLInputHooks();
 
 	// Verify all bytes that we're overwriting, before doing anything
-	if (!verifyIntegrity())
-		return false;
+
+	if (ignore_verification_check == false)
+	{
+		if (!verifyIntegrity())
+			return false;
+	}
 
 	// Initialize SDL at start of WinMain()
 	const patcher::byte initGraphicsReturnValueChk[] = {

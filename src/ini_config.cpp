@@ -13,6 +13,7 @@ bool enable_pause_code = false;
 bool enable_font_option = true;
 bool ignore_vanilla_gamepad_setting = true;
 int background_water_level = 240;
+bool ignore_verification_check = false;
 
 void LoadConfig()
 {
@@ -20,6 +21,7 @@ void LoadConfig()
 	sprintf(path, "%s\\%s", cModsPath, "sdl.ini");
 	INIReader main(path);
 
+	ignore_verification_check = main.GetBoolean("Main", "Ignore Code Verification Check", false);
 	enable_60fps = main.GetBoolean("Main", "Enable 60FPS", false);
 	enable_pause_code = main.GetBoolean("Main", "Enable Pause Code", false);
 	ignore_vanilla_gamepad_setting = main.GetBoolean("Main", "Ignore Vanilla Gamepad Setting", true);
