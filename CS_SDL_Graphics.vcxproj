@@ -66,15 +66,15 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>external\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>external\include;external\lua\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>freetype.lib;shlwapi.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua.lib;freetype.lib;shlwapi.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>exports_msvc.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>external\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>external\lib;external\lua\lib;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,7 +88,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>external\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>external\include;external\lua\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -96,9 +96,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>freetype.lib;shlwapi.lib;SDL2.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua.lib;freetype.lib;shlwapi.lib;SDL2.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>exports_msvc.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>external\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>external\lib;external\lua\lib;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -118,6 +118,7 @@
     <ClCompile Include="src\library\INIReader.cpp" />
     <ClCompile Include="src\LoadFont.cpp" />
     <ClCompile Include="src\loadimage.cpp" />
+    <ClCompile Include="src\lua\Lua.cpp" />
     <ClCompile Include="src\patch_utils.cpp" />
     <ClCompile Include="src\rendering.cpp" />
     <ClCompile Include="src\SDL_Pause.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="src\library\INIReader.h" />
     <ClInclude Include="src\LoadFont.h" />
     <ClInclude Include="src\loadimage.h" />
+    <ClInclude Include="src\lua\Lua.h" />
     <ClInclude Include="src\patch_utils.h" />
     <ClInclude Include="src\rendering.h" />
     <ClInclude Include="src\SDL_Pause.h" />

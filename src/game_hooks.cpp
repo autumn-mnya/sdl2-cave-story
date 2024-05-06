@@ -32,8 +32,17 @@
 #include "AutumnFunc.h"
 #include "File.h"
 
+#include "lua/Lua.h"
+
+int gCurrentFPS = -1;
+
 size_t font_width;
 size_t font_height;
+
+void ResetCurFPS()
+{
+	gCurrentFPS = -1;
+}
 
 void LoadPath()
 {
@@ -138,7 +147,10 @@ BOOL Flip_SystemTask(HWND)
 	const unsigned int frameDelays[3] = { 17, 16, 17 };
 	static unsigned int frame;
 
-	const unsigned int delay = enable_60fps ? frameDelays[frame % 3] : 20;
+	unsigned int delay = enable_60fps ? frameDelays[frame % 3] : 20;
+	if (gCurrentFPS != -1) {
+		delay = 1000 / gCurrentFPS;
+	}
 	++frame;
 
 	if (renderer == nullptr)
@@ -531,6 +543,7 @@ void InitTextObject(const char* name)
 
 void SwapFontObject(const FONT_DATA& font_data)
 {
+	UnloadFont(font);
 	char path[MAX_PATH];
 
 	// Construct the path to the font file
@@ -712,6 +725,11 @@ bool applySDLPatches()
 	}
 
 	RegisterSDLInputHooks();
+
+	// Enable lua functions
+	RegisterOpeningInitElement(ResetCurFPS);
+	RegisterInitElement(ResetCurFPS);
+	RegisterLuaFuncElement(PushLuaSDLFunctions);
 
 	// Verify all bytes that we're overwriting, before doing anything
 

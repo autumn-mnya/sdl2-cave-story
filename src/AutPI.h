@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include "doukutsu/all.h"
 #include <vector>
+#include "lua/Lua.h"
 
 extern HMODULE autpiDLL;  // Global variable
 
@@ -105,3 +106,13 @@ void RegisterPutFPSElement(PutFPSElementHandler handler);
 void RegisterSVPElement(TextScriptSVPElementHandler handler);
 // TransferStage() API
 void RegisterTransferStageInitElement(TransferStageInitElementHandler handler);
+// Lua API
+lua_State* GetLuaL();
+BOOL ReadStructBasic(lua_State* L, const char* name, STRUCT_TABLE* table, void* data, int length);
+BOOL Write2StructBasic(lua_State* L, const char* name, STRUCT_TABLE* table, void* data, int length);
+void PushFunctionTable(lua_State* L, const char* name, const FUNCTION_TABLE* table, int length, BOOL pop);
+void PushFunctionTableModName(lua_State* L, const char* modname, const char* name, const FUNCTION_TABLE* table, int length, BOOL pop);
+void PushSimpleMetatables(lua_State* L, const METATABLE_TABLE* table, int length);
+void RegisterLuaPreGlobalModCSElement(LuaPreGlobalModCSElementHandler handler);
+void RegisterLuaMetadataElement(LuaMetadataElementHandler handler);
+void RegisterLuaFuncElement(LuaFuncElementHandler handler);

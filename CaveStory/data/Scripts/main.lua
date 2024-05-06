@@ -22,6 +22,7 @@ function ModCS.Game.Act()
 			ModCS.Arms.GetCurrent().id = ModCS.Arms.GetCurrent().id + 1
 		end
 		print("SHIFTING")
+		ModCS.SDL.SetFPS(60)
 	end
 	
 	if ModCS.Key.Shoot(true) then
@@ -30,10 +31,10 @@ function ModCS.Game.Act()
 	
 	-- This needs to be here, just incase
 	if ModCS.Game.CanControl() then
-		if ModCS.Key.Arms() then
-			ResetSpurCharge()
-		elseif ModCS.Key.ArmsRev() then
-			ResetSpurCharge()
+		if ModCS.Key.Arms(true) then
+			ModCS.SDL.SetFPS(ModCS.SDL.GetFPS() + 1)
+		elseif ModCS.Key.ArmsRev(true) then
+			ModCS.SDL.SetFPS(ModCS.SDL.GetFPS() - 1)
 		end
 	end
 	

@@ -260,7 +260,9 @@ void DefaultSDLConfigData(SDLCONFIG* conf)
 
 	strcpy(conf->proof, gProof);
 
-	conf->b60fps = true;
+	// only set default config fps to true if sdl.ini is also true
+	if (enable_60fps)
+		conf->b60fps = true;
 
 	conf->font = GetFirstFontData(gFontData);
 

@@ -12,6 +12,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="lua">
+      <UniqueIdentifier>{26ef9052-10de-4d04-bad1-c4c458372408}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="src\AutumnFunc.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lua\Lua.cpp">
+      <Filter>lua</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="src\AutumnFunc.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua\Lua.h">
+      <Filter>lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

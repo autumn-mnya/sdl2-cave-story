@@ -14,5 +14,6 @@ extern size_t font_width;
 extern size_t font_height;
 
 extern int mag;
+extern int gCurrentFPS;
 
 void SwapFontObject(const FONT_DATA& font_data);
