@@ -710,6 +710,14 @@ bool verifyIntegrity()
 	return true;
 }
 
+void ReleaseData()
+{
+	if (autpiDLL != nullptr)
+		free(autpiDLL);
+	if (pauseDLL != nullptr)
+		free(pauseDLL);
+}
+
 // Called upon DLL initialization
 bool applySDLPatches()
 {
@@ -730,6 +738,9 @@ bool applySDLPatches()
 	RegisterOpeningInitElement(ResetCurFPS);
 	RegisterInitElement(ResetCurFPS);
 	RegisterLuaFuncElement(PushLuaSDLFunctions);
+
+	// Release dlls when finished
+	RegisterReleaseElement(ReleaseData);
 
 	// Verify all bytes that we're overwriting, before doing anything
 
