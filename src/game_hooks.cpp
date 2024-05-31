@@ -724,12 +724,18 @@ bool applySDLPatches()
 	LoadPath(); // load mods folder path - autumn
 	LoadConfig(); // load config file - autumn
 
+	LoadAutPiDll();
+
 	if (enable_pause_code)
 	{
-		LoadAutPiDll();
 		LoadPauseMenuDll();
 		RegisterPreModeElement(InitSdlPauseMenuCalls);
 		RegisterSaveConfigElement(SaveSdlConfig);
+	}
+	else
+	{
+		DefaultSDLConfigData(&gSdlConfig);
+		memcpy(bindings, gSdlConfig.bindings, sizeof(bindings));
 	}
 
 	RegisterSDLInputHooks();

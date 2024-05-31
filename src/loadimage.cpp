@@ -175,25 +175,8 @@ BOOL ReloadBitmap_File(const char* name, int surf_no)
 
 BOOL MakeSurface_Generic(int bxsize, int bysize, int surf_no, BOOL bSystem)
 {
-	// I can't add a BOOL bTarget parameter to this function like CSE2-p can, so I'll have to hardcode it like this :|
-	bool isRenderTarget;
-	switch (surf_no)
-	{
-	case 9:
-	case 10:
-	case 13:
-	case 29:
-	case 30:
-	case 31:
-	case 32:
-	case 33:
-	case 34:
-	case 35:
-		isRenderTarget = true;
-		break;
-	default:
-		isRenderTarget = false;
-	}
+	// Check if surf_no is in renderTargetIds vector
+	bool isRenderTarget = true;
 
 	int mag = csvanilla::window_magnification;
 	if (renderer == nullptr || !renderer->createSurface(surf_no, bxsize * mag, bysize * mag, isRenderTarget))

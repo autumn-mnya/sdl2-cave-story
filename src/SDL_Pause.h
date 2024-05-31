@@ -44,6 +44,8 @@ struct SDLCONFIG
 extern CONFIG_BINDING bindings[BINDING_TOTAL];
 extern bool gKeyboardState[BACKEND_KEYBOARD_TOTAL];
 
+extern SDLCONFIG gSdlConfig;
+
 BOOL LoadSDLConfigData(SDLCONFIG* conf);
 BOOL SaveSDLConfigData(const SDLCONFIG* conf);
 void DefaultSDLConfigData(SDLCONFIG* conf);
