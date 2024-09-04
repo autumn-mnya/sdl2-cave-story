@@ -382,6 +382,45 @@ void PutBitmap4(const RECT* rcView, int x, int y, const RECT* rect, int surf_no)
 	PutBitmap(rcView, x, y, rect, surf_no, false);
 }
 
+void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha)
+{
+	if (renderer == nullptr)
+		return;
+
+	RECT rcWork = *rect;
+	if (x + rect->right - rect->left > rcView->right)
+		rcWork.right -= (x + rect->right - rect->left) - rcView->right;
+	if (x < rcView->left)
+	{
+		rcWork.left += rcView->left - x;
+		x = rcView->left;
+	}
+	if (y + rect->bottom - rect->top > rcView->bottom)
+		rcWork.bottom -= (y + rect->bottom - rect->top) - rcView->bottom;
+	if (y < rcView->top)
+	{
+		rcWork.top += rcView->top - y;
+		y = rcView->top;
+	}
+
+	int mag = csvanilla::window_magnification;
+	rcWork *= mag;
+
+	// Access the surface directly from the array
+	RenderBackend::Surface& surface = renderer->surf[surf_no];
+	if (surface.texture == nullptr)
+		return;
+
+	// Set the alpha for the source surface
+	SDL_SetTextureAlphaMod(surface.texture, alpha);
+
+	// Blit the surface to the screen with alpha blending
+	renderer->blit(surf_no, rcWork, RenderBackend::FramebufferID, x * mag, y * mag, true);
+
+	// Reset the alpha to fully opaque after rendering
+	SDL_SetTextureAlphaMod(surface.texture, SDL_ALPHA_OPAQUE);
+}
+
 void Surface2Surface(int x, int y, const RECT* rect, int to, int from)
 {
 	if (renderer == nullptr)

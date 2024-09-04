@@ -36,6 +36,7 @@ class RenderBackend
 	friend SDL_Renderer* Get_SDL_Renderer();
 	friend void* Get_Surface(int surfaceID);
 	friend void* GetSurf();
+	friend void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha);
 public:
 	RenderBackend();
 	~RenderBackend();
@@ -64,6 +65,7 @@ public:
 };
 
 extern RenderBackend* renderer;
+extern void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha);
 
 typedef void (*SdlStartDirectDrawElementHandler)();
 extern "C" __declspec(dllexport) void RegisterSDLStartDirectDrawElement(SdlStartDirectDrawElementHandler handler);

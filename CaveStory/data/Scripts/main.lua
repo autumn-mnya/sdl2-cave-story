@@ -43,6 +43,8 @@ function ModCS.Game.Act()
 	end
 end
 
+local rcQuote = ModCS.Rect.Create(0, 0, 16, 16)
+
 function ModCS.Game.Draw()
 	if ModCS.Game.GetMode() == 1 then
 		ModCS.PutNumber(1, 0, 0)
@@ -55,6 +57,8 @@ function ModCS.Game.Draw()
 	if ModCS.Game.GetMode() == 3 then
 		ModCS.PutNumber(3, 0, 0)
 	end
+	
+	ModCS.SDL.PutAlpha(rcQuote, 0, 0, 16, 120)
 end
 
 function ModCS.Tsc.Command.FOO() -- Launch Geometry Dash via Steam

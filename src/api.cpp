@@ -52,3 +52,8 @@ const Uint8* Get_SDL_KeyboardState()
 	// Return the current state of the keyboard keys
 	return SDL_GetKeyboardState(NULL);
 }
+
+void PutBitmap3Alpha(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha)
+{
+	PutBitmap3A(rcView, x, y, rect, surf_no, alpha);
+}
