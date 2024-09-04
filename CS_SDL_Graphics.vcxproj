@@ -72,7 +72,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>lua.lib;freetype.lib;shlwapi.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>yaml-cpp.lib;lua.lib;freetype.lib;shlwapi.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>exports_msvc.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>external\lib;external\lua\lib;</AdditionalLibraryDirectories>
     </Link>
@@ -96,7 +96,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>lua.lib;freetype.lib;shlwapi.lib;SDL2.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>yaml-cpp.lib;lua.lib;freetype.lib;shlwapi.lib;SDL2.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>exports_msvc.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>external\lib;external\lua\lib;</AdditionalLibraryDirectories>
     </Link>
