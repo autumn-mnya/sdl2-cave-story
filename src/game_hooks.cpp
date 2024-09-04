@@ -4,6 +4,7 @@
 #include "loadimage.h"
 #include "font.h"
 #include "patch_utils.h"
+#include "doukutsu/background.h"
 #include "doukutsu/credits.h"
 #include "doukutsu/cstdlib.h"
 #include "doukutsu/draw.h"
