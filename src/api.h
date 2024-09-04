@@ -25,6 +25,6 @@ extern "C" {
 	void* Get_Surface(int surfaceID);
 }
 
-extern "C" __declspec(dllexport) void PutBitmap3Alpha(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha);
+extern "C" __declspec(dllexport) void PutBitmap3Alpha(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint8 red, Uint8 green, Uint8 blue);
 extern "C" __declspec(dllexport) Uint32 Get_SDL_MouseState(int* x, int* y);
 extern "C" __declspec(dllexport) const Uint8* Get_SDL_KeyboardState();

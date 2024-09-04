@@ -382,7 +382,7 @@ void PutBitmap4(const RECT* rcView, int x, int y, const RECT* rect, int surf_no)
 	PutBitmap(rcView, x, y, rect, surf_no, false);
 }
 
-void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha)
+void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint8 red, Uint8 green, Uint8 blue)
 {
 	if (renderer == nullptr)
 		return;
@@ -396,7 +396,7 @@ void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no
 		x = rcView->left;
 	}
 	if (y + rect->bottom - rect->top > rcView->bottom)
-		rcWork.bottom -= (y + rect->bottom - rect->top) - rcView->bottom;
+		rcWork.bottom -= (y + rcView->bottom - rcWork.top) - rcView->bottom;
 	if (y < rcView->top)
 	{
 		rcWork.top += rcView->top - y;
@@ -406,19 +406,34 @@ void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no
 	int mag = csvanilla::window_magnification;
 	rcWork *= mag;
 
-	// Access the surface directly from the array
 	RenderBackend::Surface& surface = renderer->surf[surf_no];
 	if (surface.texture == nullptr)
 		return;
 
-	// Set the alpha for the source surface
+	SDL_SetTextureBlendMode(surface.texture, SDL_BLENDMODE_BLEND);
+
 	SDL_SetTextureAlphaMod(surface.texture, alpha);
 
-	// Blit the surface to the screen with alpha blending
-	renderer->blit(surf_no, rcWork, RenderBackend::FramebufferID, x * mag, y * mag, true);
+	// Apply tinting only if the color is not black (0, 0, 0)
+	if (red != 0 || green != 0 || blue != 0)
+	{
+		SDL_SetTextureColorMod(surface.texture, red, green, blue);
+	}
 
-	// Reset the alpha to fully opaque after rendering
+	// Calculate the center point of the rectangle for rotation
+	SDL_Point center = {
+		(rcWork.right - rcWork.left) / 2,
+		(rcWork.bottom - rcWork.top) / 2
+	};
+
+	SDL_Rect sourceRect = RECT2SDL_Rect(rcWork);
+	SDL_Rect destinationRect = { x * mag, y * mag, sourceRect.w, sourceRect.h };
+
+	SDL_SetRenderTarget(renderer->renderer, renderer->framebuffer.texture);
+	SDL_RenderCopyEx(renderer->renderer, surface.texture, &sourceRect, &destinationRect, angle, &center, SDL_FLIP_NONE);
+
 	SDL_SetTextureAlphaMod(surface.texture, SDL_ALPHA_OPAQUE);
+	SDL_SetTextureColorMod(surface.texture, 255, 255, 255);
 }
 
 void Surface2Surface(int x, int y, const RECT* rect, int to, int from)
