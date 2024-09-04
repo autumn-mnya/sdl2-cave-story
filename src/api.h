@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 // Functions to be exported from the DLL so that other programs can access the SDL rendering facilities
 // that this DLL mod enables
 
@@ -20,3 +22,6 @@ extern "C" {
 	// The surface IDs are mapped in the same way as vanilla CS. You can also pass -1 to retrieve the main framebuffer object.
 	void* Get_Surface(int surfaceID);
 }
+
+extern "C" __declspec(dllexport) Uint32 Get_SDL_MouseState(int* x, int* y);
+extern "C" __declspec(dllexport) const Uint8* Get_SDL_KeyboardState();

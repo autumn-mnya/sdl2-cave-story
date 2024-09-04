@@ -1,5 +1,10 @@
 #include "api.h"
 #include "rendering.h"
+#include <SDL.h>
+
+// Global variables for storing mouse state and coordinates
+static Uint32 mouseButtons = 0;
+static int mouseX = 0, mouseY = 0;
 
 extern "C" {
 	SDL_Window* Get_SDL_Window()
@@ -27,4 +32,23 @@ extern "C" {
 		}
 		return nullptr;
 	}
+}
+
+Uint32 Get_SDL_MouseState(int* x, int* y)
+{
+	// Update the global mouse state and coordinates
+	mouseButtons = SDL_GetMouseState(&mouseX, &mouseY);
+
+	if (x != nullptr)
+		*x = mouseX;
+	if (y != nullptr)
+		*y = mouseY;
+
+	return mouseButtons;
+}
+
+const Uint8* Get_SDL_KeyboardState()
+{
+	// Return the current state of the keyboard keys
+	return SDL_GetKeyboardState(NULL);
 }
