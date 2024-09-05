@@ -396,7 +396,7 @@ void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no
 		x = rcView->left;
 	}
 	if (y + rect->bottom - rect->top > rcView->bottom)
-		rcWork.bottom -= (y + rcView->bottom - rcWork.top) - rcView->bottom;
+		rcWork.bottom -= (y + rect->bottom - rect->top) - rcView->bottom;
 	if (y < rcView->top)
 	{
 		rcWork.top += rcView->top - y;
