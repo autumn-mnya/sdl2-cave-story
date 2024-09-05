@@ -46,10 +46,9 @@ end
 local rcQuote = ModCS.Rect.Create(0, 0, 16, 16)
 
 function ModCS.Game.Draw()
-	-- Last 4 arguments are optional. They are Rotation, Red, Green, Blue
+	-- Last 2 arguments are optional. They are Rotation, Color Tint
 	-- So sprite rotation and "tinting" yeah
-	ModCS.SDL.PutAlpha(rcQuote, 0, 0, 16, 120, 45, 255, 255, 0)
-	ModCS.SDL.PutMat2x2(rcQuote, 0, 0, 320, 0, 0, 240, 320, 240, 8, 0xFFFFFF0F)
+	ModCS.SDL.PutAlpha(rcQuote, 0, 0, 16, 120, 45, 0xFFFF00)
 end
 
 function ModCS.Tsc.Command.FOO() -- Launch Geometry Dash via Steam

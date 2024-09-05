@@ -382,7 +382,7 @@ void PutBitmap4(const RECT* rcView, int x, int y, const RECT* rect, int surf_no)
 	PutBitmap(rcView, x, y, rect, surf_no, false);
 }
 
-void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint8 red, Uint8 green, Uint8 blue)
+void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint32 color)
 {
 	if (renderer == nullptr)
 		return;
@@ -415,9 +415,9 @@ void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no
 	SDL_SetTextureAlphaMod(surface.texture, alpha);
 
 	// Apply tinting only if the color is not black (0, 0, 0)
-	if (red != 0 || green != 0 || blue != 0)
+	if ((color >> 16 & 0xFF) != 0 || (color >> 8 & 0xFF) != 0 || (color & 0xFF) != 0)
 	{
-		SDL_SetTextureColorMod(surface.texture, red, green, blue);
+		SDL_SetTextureColorMod(surface.texture, color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF);
 	}
 
 	// Calculate the center point of the rectangle for rotation
