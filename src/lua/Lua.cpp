@@ -23,7 +23,7 @@ extern "C"
 #include "../AutPI.h"
 
 #define gL GetLuaL()
-#define FUNCTION_TABLE_SDL_SIZE 4
+#define FUNCTION_TABLE_SDL_SIZE 5
 
 static int lua_GetCurrentFPS(lua_State* L)
 {
@@ -70,12 +70,31 @@ static int lua_PutRectAlpha(lua_State* L)
 	return 0;
 }
 
+static int lua_PutMat2x2(lua_State* L)
+{
+	RECT* rect = (RECT*)luaL_checkudata(L, 1, "RectMeta");
+	float x0 = (float)luaL_checknumber(L, 2);
+	float y0 = (float)luaL_checknumber(L, 3);
+	float x1 = (float)luaL_checknumber(L, 4);
+	float y1 = (float)luaL_checknumber(L, 5);
+	float x2 = (float)luaL_checknumber(L, 6);
+	float y2 = (float)luaL_checknumber(L, 7);
+	float x3 = (float)luaL_checknumber(L, 8);
+	float y3 = (float)luaL_checknumber(L, 9);
+	int surf = (int)luaL_checknumber(L, 10);
+	int color = (int)luaL_checknumber(L, 11);
+	int alpha = (int)luaL_optnumber(L, 12, 255);
+	PutMat2x2(rect, x0, y0, x1, y1, x2, y2, x3, y3, surf, color, alpha);
+	return 0;
+}
+
 FUNCTION_TABLE SdlFunctionTable[FUNCTION_TABLE_SDL_SIZE] =
 {
 	{"GetFPS", lua_GetCurrentFPS},
 	{"SetFPS", lua_SetCurrentFPS},
 	{"ResetFPS", lua_ResetCurrentFPS},
-	{"PutAlpha",lua_PutRectAlpha}
+	{"PutAlpha",lua_PutRectAlpha},
+	{"PutMat2x2", lua_PutMat2x2},
 };
 
 void PushLuaSDLFunctions()

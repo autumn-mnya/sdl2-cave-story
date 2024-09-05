@@ -436,6 +436,45 @@ void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no
 	SDL_SetTextureColorMod(surface.texture, 255, 255, 255);
 }
 
+void PutMat2x2(const RECT* src, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3, int surf_no, Uint32 color, Uint8 alpha)
+{
+	if (renderer == nullptr)
+		return;
+
+	RenderBackend::Surface& surface = renderer->surf[surf_no];
+	if (surface.texture == nullptr)
+		return;
+
+	SDL_SetTextureBlendMode(surface.texture, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderTarget(renderer->renderer, renderer->framebuffer.texture);
+
+	SDL_Point size;
+	SDL_QueryTexture(surface.texture, NULL, NULL, &size.x, &size.y);
+
+	int mag = csvanilla::window_magnification;
+
+	float srcl = (float)(src->left * mag) / (float)size.x;
+	float srcr = (float)(src->right * mag) / (float)size.x;
+	float srct = (float)(src->top * mag) / (float)size.y;
+	float srcb = (float)(src->bottom * mag) / (float)size.y;
+
+	const SDL_Vertex vertexA = { {x0 * mag, y0 * mag}, {color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, alpha}, {srcl, srct} };
+	const SDL_Vertex vertexB = { {x1 * mag, y1 * mag}, {color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, alpha}, {srcr, srct} };
+	const SDL_Vertex vertexC = { {x2 * mag, y2 * mag}, {color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, alpha}, {srcr, srcb} };
+	const SDL_Vertex vertexD = { {x3 * mag, y3 * mag}, {color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, alpha}, {srcl, srcb} };
+
+	const SDL_Vertex vertices[] = {
+		vertexA, vertexB, vertexC, vertexD
+	};
+
+	const int indices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	SDL_RenderGeometry(renderer->renderer, surface.texture, vertices, 4, indices, 6);
+}
+
 void Surface2Surface(int x, int y, const RECT* rect, int to, int from)
 {
 	if (renderer == nullptr)
