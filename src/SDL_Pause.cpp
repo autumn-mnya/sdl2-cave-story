@@ -809,9 +809,12 @@ void InitSdlPauseMenuCalls()
 
 	memcpy(bindings, gSdlConfig.bindings, sizeof(bindings));
 
-	add_pause_entry(GetOptionsMenu(), "Controls (Keyboard)", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE, GetNumEntriesAddedMenu());
-	add_pause_entry(GetOptionsMenu(), "Controls (Gamepad)", Callback_ControlsController, NULL, NULL, 0, FALSE, GetNumEntriesAddedMenu());
-	add_pause_entry(GetOptionsMenu(), "Framerate", Callback_Framerate, GetSdlConf(), NULL, 0, FALSE, GetNumEntriesAddedMenu());
-	if (enable_font_option)
-		add_pause_entry(GetOptionsMenu(), "Font", Callback_Font, GetSdlConf(), NULL, 0, FALSE, GetNumEntriesAddedMenu());
+	if (pauseDLL != nullptr)
+	{
+		add_pause_entry(GetOptionsMenu(), "Controls (Keyboard)", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE, GetNumEntriesAddedMenu());
+		add_pause_entry(GetOptionsMenu(), "Controls (Gamepad)", Callback_ControlsController, NULL, NULL, 0, FALSE, GetNumEntriesAddedMenu());
+		add_pause_entry(GetOptionsMenu(), "Framerate", Callback_Framerate, GetSdlConf(), NULL, 0, FALSE, GetNumEntriesAddedMenu());
+		if (enable_font_option)
+			add_pause_entry(GetOptionsMenu(), "Font", Callback_Font, GetSdlConf(), NULL, 0, FALSE, GetNumEntriesAddedMenu());
+	}
 }

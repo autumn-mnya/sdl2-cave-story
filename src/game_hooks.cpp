@@ -727,17 +727,9 @@ bool applySDLPatches()
 
 	LoadAutPiDll();
 
-	if (enable_pause_code)
-	{
-		LoadPauseMenuDll();
-		RegisterPreModeElement(InitSdlPauseMenuCalls);
-		RegisterSaveConfigElement(SaveSdlConfig);
-	}
-	else
-	{
-		DefaultSDLConfigData(&gSdlConfig);
-		memcpy(bindings, gSdlConfig.bindings, sizeof(bindings));
-	}
+	LoadPauseMenuDll();
+	RegisterPreModeElement(InitSdlPauseMenuCalls);
+	RegisterSaveConfigElement(SaveSdlConfig);
 
 	RegisterSDLInputHooks();
 
