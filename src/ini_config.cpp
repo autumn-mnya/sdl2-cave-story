@@ -1,4 +1,6 @@
 #include <Windows.h>
+#include <cstdio>
+#include <cstring>
 #include "library/ini.h"
 #include "library/INIReader.h"
 #include <stdio.h>
@@ -18,6 +20,15 @@ void LoadConfig()
 {
 	char path[MAX_PATH];
 	sprintf(path, "%s\\%s\\%s", cModsPath, "sdl", "settings.ini");
+
+	FILE* fp = fopen(path, "r");
+	if (!fp)
+	{
+		printf("sdl settings.ini file at path '%s' not found. Config not loaded.\n", path);
+		return;
+	}
+	fclose(fp);
+
 	INIReader main(path);
 
 	ignore_verification_check = main.GetBoolean("Main", "Ignore Code Verification Check", false);
@@ -26,5 +37,5 @@ void LoadConfig()
 	background_water_level = main.GetInteger("Main", "Background Water Level", 240);
 	enable_font_option = main.GetBoolean("Pause Menu", "Enable Font Option", true);
 
-	printf("Loaded sdl.ini\n");
+	printf("Loaded sdl settings.ini\n");
 }
