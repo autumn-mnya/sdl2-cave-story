@@ -17,6 +17,7 @@
 mono_crash.*
 
 # Build results
+/build*
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -381,3 +382,5 @@ CaveStory/window.rect
 !CaveStory/mods/autpi/autpi.dll
 !CaveStory/mods/pause/pause.dll
 !CaveStory/mods/sdl/sdl.dll
+!CaveStory/dsound.dll
+!CaveStory/mods/mod_loader.dll

@@ -1,6 +1,12 @@
-# Cave Story but with SDL Graphics
+# Cave Story but with SDL Graphics (autumn's fork)
 
-## Introduction
+## Introduction (from autumn)
+
+Hi! This is a fork of periwinkles SDL2 dll for Cave Story, adding 60fps, a function to draw bitmaps with alpha, and more surfaces for the user to use alongside AutPI.
+
+This version also __requires__ AutPI to be installed.
+
+## Introduction (from Periwinkle)
 This is a DLL mod that completely rips out all of Cave Story's DirectDraw rendering system,
 and replaces it with SDL calls (based on CSE2-portable backend code).
 It is intended to fix issues such as sprites not drawing with transparency, or fullscreen
@@ -17,9 +23,12 @@ Note the following changes to the behavior of the DoConfig options:
 * The "Full 32-bit" window mode will be treated as "1280x960 Windowed"
 * Courier New is the only available font; changing the font name in Config.dat will have no effect.
 
-## Compiling
-The dependencies for this project are listed in `external/readme_dependencies.txt`.
-(They are not included with this repo.)
-A Visual Studio 2017 project and MSYS2 Makefile are provided for compiling. Note, if you
-are using MSYS2 then you must use the MinGW 32-bit environment, since Cave Story is a
-32-bit game and therefore the DLL must be built for a 32-bit architecture.
+## Building
+
+The recommended method of compiling this mod is to use [CMake](https://cmake.org/).
+
+For windows users, I would recommend installing CMake, alongside __Visual Studio 2019__ or above. Install both, open "cmake-gui" if inexperienced, open the source code folder, and set a build directory. Configure it, and set the platform to "Win32". Generate after, and open the new `.sln` file in the build folder, and build!
+
+## Compatibility
+
+This dll should work for Windows 7+, but not XP or below.

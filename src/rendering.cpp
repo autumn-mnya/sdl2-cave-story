@@ -4,7 +4,7 @@
 #include "bitmap.h"
 #include "font.h"
 #include "loadimage.h"
-#include <Windows.h>
+#include <windows.h>
 
 #include "doukutsu/draw.h"
 #include "doukutsu/misc.h"

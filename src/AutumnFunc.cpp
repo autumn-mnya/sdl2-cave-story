@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 #include <iostream>
 #include "API_Pause.h"
 #include "ini_config.h"

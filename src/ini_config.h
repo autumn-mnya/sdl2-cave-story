@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 
 extern char cModsPath[MAX_PATH];
 extern char cModulePath[MAX_PATH];

@@ -13,9 +13,9 @@
 #include "doukutsu/organya.h"
 #include "doukutsu/tsc.h"
 #include "doukutsu/window.h"
-#include <Windows.h>
+#include <windows.h>
 #include <synchapi.h>
-#include <ShlObj.h>
+#include <shlobj.h>
 #include <string>
 #include <cstddef>
 #include <filesystem>
@@ -711,14 +711,6 @@ bool verifyIntegrity()
 	return true;
 }
 
-void ReleaseData()
-{
-	if (autpiDLL != nullptr)
-		free(autpiDLL);
-	if (pauseDLL != nullptr)
-		free(pauseDLL);
-}
-
 // Called upon DLL initialization
 bool applySDLPatches()
 {
@@ -737,9 +729,6 @@ bool applySDLPatches()
 	RegisterOpeningInitElement(ResetCurFPS);
 	RegisterInitElement(ResetCurFPS);
 	RegisterLuaFuncElement(PushLuaSDLFunctions);
-
-	// Release dlls when finished
-	RegisterReleaseElement(ReleaseData);
 
 	// Verify all bytes that we're overwriting, before doing anything
 

@@ -5,12 +5,10 @@
 #include "AutPI.h"
 #include "lua/Lua.h"
 
-HMODULE autpiDLL = nullptr;  // Global variable
+HMODULE autpiDLL = nullptr;
 
-// Function pointer for dynamically loaded functions
 typedef void (*RegisterElementFunc)(void (*)());
 
-// Function to register an element handler
 void RegisterElement(std::vector<void (*)()>& handlers, const char* functionName, void (*handler)())
 {
     if (autpiDLL != nullptr) {
@@ -24,18 +22,57 @@ void RegisterElement(std::vector<void (*)()>& handlers, const char* functionName
         }
         else {
             std::cerr << "Failed to get the function pointer for " << functionName << "\n";
-            // You might want to handle the error appropriately.
         }
     }
 }
 
-// Function to load autpi.dll
+void AutPI_AddBoss(csvanilla::BOSSFUNCTION func, char* author, char* name)
+{
+    typedef void (*AutPI_AddBossFunc)(csvanilla::BOSSFUNCTION, char*, char*);
+    AutPI_AddBossFunc addBossFunc = reinterpret_cast<AutPI_AddBossFunc>(
+        GetProcAddress(autpiDLL, "AutPI_AddBoss"));
+
+    if (addBossFunc == nullptr) {
+        std::cerr << "Failed to get the function pointer for AutPI_AddBoss\n";
+        return;
+    }
+
+    addBossFunc(func, author, name);
+}
+
+void AutPI_AddCaret(csvanilla::CARETFUNCTION func, char* author, char* name)
+{
+    typedef void (*AutPI_AddCaretFunc)(csvanilla::CARETFUNCTION, char*, char*);
+    AutPI_AddCaretFunc addCaretFunc = reinterpret_cast<AutPI_AddCaretFunc>(
+        GetProcAddress(autpiDLL, "AutPI_AddCaret"));
+
+    if (addCaretFunc == nullptr) {
+        std::cerr << "Failed to get the function pointer for AutPI_AddCaret\n";
+        return;
+    }
+
+    addCaretFunc(func, author, name);
+}
+
+void AutPI_AddEntity(csvanilla::NPCFUNCTION func, char* author, char* name)
+{
+    typedef void (*AutPI_AddEntityFunc)(csvanilla::NPCFUNCTION, char*, char*);
+    AutPI_AddEntityFunc addEntityFunc = reinterpret_cast<AutPI_AddEntityFunc>(
+        GetProcAddress(autpiDLL, "AutPI_AddEntity"));
+
+    if (addEntityFunc == nullptr) {
+        std::cerr << "Failed to get the function pointer for AutPI_AddEntity\n";
+        return;
+    }
+
+    addEntityFunc(func, author, name);
+}
+
 void LoadAutPiDll()
 {
-    autpiDLL = LoadLibraryA("autpi.dll");
+    autpiDLL = LoadLibrary("autpi.dll");
     if (autpiDLL == nullptr) {
         std::cerr << "Failed to load autpi.dll\n";
-        // You might want to handle the error appropriately, e.g., throw an exception or return early.
     }
 }
 
@@ -90,6 +127,7 @@ DEFINE_REGISTER_FUNCTION(SaveProfilePreCloseElementHandler, SaveProfilePreCloseE
 DEFINE_REGISTER_FUNCTION(SaveProfilePostCloseElementHandler, SaveProfilePostCloseElement)
 DEFINE_REGISTER_FUNCTION(LoadProfilePreCloseElementHandler, LoadProfilePreCloseElement)
 DEFINE_REGISTER_FUNCTION(LoadProfilePostCloseElementHandler, LoadProfilePostCloseElement)
+DEFINE_REGISTER_FUNCTION(LoadProfileInitElementHandler, LoadProfileInitElement)
 DEFINE_REGISTER_FUNCTION(InitializeGameInitElementHandler, InitializeGameInitElement)
 DEFINE_REGISTER_FUNCTION(PutFPSElementHandler, PutFPSElement)
 DEFINE_REGISTER_FUNCTION(TextScriptSVPElementHandler, SVPElement)
@@ -103,7 +141,6 @@ typedef lua_State* (*GetLuaLFunc)();
 
 lua_State* GetLuaL()
 {
-    // Load GetLuaL function pointer from the DLL
     GetLuaLFunc getLuaLFunc = reinterpret_cast<GetLuaLFunc>(
         GetProcAddress(autpiDLL, "GetLuaL"));
 
@@ -112,9 +149,8 @@ lua_State* GetLuaL()
         return nullptr;
     }
 
-    // Call GetLuaL function to retrieve lua_State*
     lua_State* luaL = getLuaLFunc();
-    return luaL; // Return the lua_State* obtained from GetLuaL
+    return luaL;
 }
 
 BOOL ReadStructBasic(lua_State* L, const char* name, STRUCT_TABLE* table, void* data, int length)
@@ -222,47 +258,17 @@ BOOL ReloadModScript()
     return func();
 }
 
-unsigned char ModLoader_GetByte(void* address)
+char* GetCustomSaveName()
 {
-    typedef unsigned char (*funcdef)(void* address);
+    typedef char*(*funcdef)();
 
     funcdef func = reinterpret_cast<funcdef>(
-        GetProcAddress(autpiDLL, "ModLoader_GetByte"));
+        GetProcAddress(autpiDLL, "GetCustomSaveName"));
 
     if (func == nullptr) {
-        std::cerr << "Failed to get the function pointer for ModLoader_GetByte\n";
-        return FALSE;
+        std::cerr << "Failed to get the function pointer for GetCustomSaveName\n";
+        return "autpi-dll-failure.dat";
     }
 
-    return func(address);
-}
-
-unsigned short ModLoader_GetWord(void* address)
-{
-    typedef unsigned short (*funcdef)(void* address);
-
-    funcdef func = reinterpret_cast<funcdef>(
-        GetProcAddress(autpiDLL, "ModLoader_GetWord"));
-
-    if (func == nullptr) {
-        std::cerr << "Failed to get the function pointer for ModLoader_GetWord\n";
-        return FALSE;
-    }
-
-    return func(address);
-}
-
-unsigned long ModLoader_GetLong(void* address)
-{
-    typedef unsigned long (*funcdef)(void* address);
-
-    funcdef func = reinterpret_cast<funcdef>(
-        GetProcAddress(autpiDLL, "ModLoader_GetLong"));
-
-    if (func == nullptr) {
-        std::cerr << "Failed to get the function pointer for ModLoader_GetLong\n";
-        return FALSE;
-    }
-
-    return func(address);
+    return func();
 }

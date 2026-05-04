@@ -1,97 +1,44 @@
 // AutPI.h
 
-#include <Windows.h>
+#include <windows.h>
 #include <vector>
 #include "lua/Lua.h"
+
+#include "doukutsu/boss.h"
+#include "doukutsu/caret.h"
+#include "doukutsu/npc.h"
+#include "doukutsu/npc_ai.h"
 
 extern "C"
 {
 #include <lua.h>
 }
 
+void RegisterElement(std::vector<void (*)()>& handlers, const char* functionName, void (*handler)());
+
 #define DEFINE_REGISTER_FUNCTION(HandlerType, HandlerName) \
     std::vector<HandlerType> HandlerName##Handlers; \
-    \
-    void Register##HandlerName##(HandlerType handler) \
+    void Register##HandlerName(HandlerType handler) \
     { \
         RegisterElement(HandlerName##Handlers, "Register" #HandlerName, reinterpret_cast<void (*)()>(handler)); \
     }
 
 #define DEFINE_REGISTER_HEADER(HandlerType, HandlerName) \
-    void Register##HandlerName##(HandlerType handler);
+    typedef void (*HandlerType)(); \
+    void Register##HandlerName(HandlerType handler);
 
-extern HMODULE autpiDLL;  // Global variable
+extern HMODULE autpiDLL;
 
-// Game()
-typedef void (*OpeningBelowFadeElementHandler)();
-typedef void (*OpeningAboveFadeElementHandler)();
-// GetTrg()
-typedef void (*GetTrgElementHandler)();
-// ModeOpening()
-typedef void (*PreModeElementHandler)();
-typedef void (*ReleaseElementHandler)();
-typedef void (*OpeningBelowTextBoxElementHandler)();
-typedef void (*OpeningAboveTextBoxElementHandler)();
-typedef void (*OpeningEarlyActionElementHandler)();
-typedef void (*OpeningActionElementHandler)();
-typedef void (*OpeningInitElementHandler)();
-typedef void (*OpeningBelowPutCaretElementHandler)();
-typedef void (*OpeningAbovePutCaretElementHandler)();
-typedef void (*OpeningBelowPutBackElementHandler)();
-typedef void (*OpeningAbovePutBackElementHandler)();
-typedef void (*MOBelowPutFPSElementHandler)();
-typedef void (*MOAbovePutFPSElementHandler)();
-typedef void (*OpeningBelowPutStage_BackElementHandler)();
-typedef void (*OpeningAbovePutStage_BackElementHandler)();
-typedef void (*OpeningBelowPutStage_FrontElementHandler)();
-typedef void (*OpeningAbovePutStage_FrontElementHandler)();
-// ModeTitle()
-typedef void (*TitleInitElementHandler)();
-typedef void (*TitleActionElementHandler)();
-typedef void (*TitleBelowCounterElementHandler)();
-typedef void (*MTBelowPutFPSElementHandler)();
-typedef void (*MTAbovePutFPSElementHandler)();
-// ModeAction()
-typedef void (*PlayerHudElementHandler)();
-typedef void (*CreditsHudElementHandler)();
-typedef void (*BelowFadeElementHandler)();
-typedef void (*AboveFadeElementHandler)();
-typedef void (*BelowTextBoxElementHandler)();
-typedef void (*AboveTextBoxElementHandler)();
-typedef void (*BelowPlayerElementHandler)();
-typedef void (*AbovePlayerElementHandler)();
-typedef void (*EarlyActionElementHandler)();
-typedef void (*ActionElementHandler)();
-typedef void (*CreditsActionElementHandler)();
-typedef void (*InitElementHandler)();
-typedef void (*BelowPutCaretElementHandler)();
-typedef void (*AbovePutCaretElementHandler)();
-typedef void (*MABelowPutFPSElementHandler)();
-typedef void (*MAAbovePutFPSElementHandler)();
-typedef void (*BelowPutBackElementHandler)();
-typedef void (*AbovePutBackElementHandler)();
-typedef void (*BelowPutStage_BackElementHandler)();
-typedef void (*AbovePutStage_BackElementHandler)();
-typedef void (*BelowPutStage_FrontElementHandler)();
-typedef void (*AbovePutStage_FrontElementHandler)();
-// Profile
-typedef void (*SaveProfilePreCloseElementHandler)();
-typedef void (*SaveProfilePostCloseElementHandler)();
-typedef void (*LoadProfilePreCloseElementHandler)();
-typedef void (*LoadProfilePostCloseElementHandler)();
-typedef void (*InitializeGameInitElementHandler)();
-// PutFPS
-typedef void (*PutFPSElementHandler)();
-// TextScript
-typedef void (*TextScriptSVPElementHandler)();
-// TransferStage()
-typedef void (*TransferStageInitElementHandler)();
-// Lua
-typedef void (*LuaPreGlobalModCSElementHandler)();
-typedef void (*LuaMetadataElementHandler)();
-typedef void (*LuaFuncElementHandler)();
+// Boss API
+void AutPI_AddBoss(csvanilla::BOSSFUNCTION func, char* author, char* name);
+
+// Caret API
+void AutPI_AddCaret(csvanilla::CARETFUNCTION func, char* author, char* name);
 
 void LoadAutPiDll();
+
+// NpcTbl API
+void AutPI_AddEntity(csvanilla::NPCFUNCTION func, char* author, char* name);
 
 DEFINE_REGISTER_HEADER(PreModeElementHandler, PreModeElement)
 DEFINE_REGISTER_HEADER(ReleaseElementHandler, ReleaseElement)
@@ -144,6 +91,7 @@ DEFINE_REGISTER_HEADER(SaveProfilePreCloseElementHandler, SaveProfilePreCloseEle
 DEFINE_REGISTER_HEADER(SaveProfilePostCloseElementHandler, SaveProfilePostCloseElement)
 DEFINE_REGISTER_HEADER(LoadProfilePreCloseElementHandler, LoadProfilePreCloseElement)
 DEFINE_REGISTER_HEADER(LoadProfilePostCloseElementHandler, LoadProfilePostCloseElement)
+DEFINE_REGISTER_HEADER(LoadProfileInitElementHandler, LoadProfileInitElement)
 DEFINE_REGISTER_HEADER(InitializeGameInitElementHandler, InitializeGameInitElement)
 DEFINE_REGISTER_HEADER(PutFPSElementHandler, PutFPSElement)
 DEFINE_REGISTER_HEADER(TextScriptSVPElementHandler, SVPElement)
@@ -161,6 +109,4 @@ void PushFunctionTableModName(lua_State* L, const char* modname, const char* nam
 void PushSimpleMetatables(lua_State* L, const METATABLE_TABLE* table, int length);
 BOOL LoadStageTable(char* name);
 BOOL ReloadModScript();
-unsigned char ModLoader_GetByte(void* address);
-unsigned short ModLoader_GetWord(void* address);
-unsigned long ModLoader_GetLong(void* address);
+char* GetCustomSaveName();

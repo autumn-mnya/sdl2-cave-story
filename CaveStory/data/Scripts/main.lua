@@ -1,18 +1,5 @@
-require("arms")
-require("npc")
-
 ModCS.Mod.SetName("AutPI")
 ModCS.Mod.SetAuthor("autumn")
-
-ModCS.Mod.SetOpening(13, 100, 1000)
-ModCS.Mod.SetStart(13, 94, 10, 8)
-
-ModCS.AddEntity("MyNewEntity")
-ModCS.AddCaret("MyNewCaret")
-
---function ModCS.Game.Act()
---	ModCS.Npc.Spawn(361, 10, 10)
---end
 
 local rcQuote = ModCS.Rect.Create(0, 0, 16, 16)
 local rcMask = rcQuote
@@ -49,7 +36,7 @@ function AnimateMask()
 	}
 	
 	-- Return if the player is hidden
-	if (ModCS.Player.cond & 2 ~= 0) then
+	if (ModCS.Player.CheckCond(2)) then
 		return
 	end
 	
@@ -86,10 +73,18 @@ end
 
 -- Update and animate the color
 function GetRainbowColor()
-    local time = os.clock()  -- Get time in seconds
-    local hue = (time % 1)  -- Cycle through hue every second
-    local r, g, b = HSVtoRGB(hue, 1, 1)  -- Full saturation and value for vibrant colors
-    return (r << 16) | (g << 8) | b  -- Combine RGB into a single color
+	local time = os.clock()
+	local hue = time % 1
+
+	local r, g, b = HSVtoRGB(hue, 1, 1)
+
+	-- ensure integers (important for Lua 5.1 / LuaJIT consistency)
+	r = math.floor(r)
+	g = math.floor(g)
+	b = math.floor(b)
+
+	-- pack into 0xRRGGBB using arithmetic
+	return r * 65536 + g * 256 + b
 end
 
 function ModCS.Game.DrawAbovePlayer()
