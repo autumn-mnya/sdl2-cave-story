@@ -14,7 +14,6 @@
 #include "doukutsu/tsc.h"
 #include "doukutsu/window.h"
 #include <windows.h>
-#include <synchapi.h>
 #include <shlobj.h>
 #include <string>
 #include <cstddef>
