@@ -18,7 +18,6 @@
 #include <shlobj.h>
 #include <string>
 #include <cstddef>
-#include <filesystem>
 #include "ini_config.h"
 #include <shlwapi.h>
 

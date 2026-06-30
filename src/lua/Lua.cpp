@@ -59,11 +59,14 @@ static int lua_PutRectAlpha(lua_State* L)
 	int x = (int)luaL_checknumber(L, 2);
 	int y = (int)luaL_checknumber(L, 3);
 	int surface = (int)luaL_checknumber(L, 4);
-	int alpha = (int)luaL_checknumber(L, 5);
-	double angle = (double)luaL_optnumber(L, 6, 0);
-	unsigned int color = (unsigned int)luaL_optnumber(L, 7, 0);
 
-	PutBitmap3Alpha(&csvanilla::grcFull, x, y, rect, surface, alpha, angle, color);
+	int alpha = lua_isnoneornil(L, 5) ? 255 : (int)luaL_checknumber(L, 5);
+	double angle = lua_isnoneornil(L, 6) ? 0.0 : (double)luaL_checknumber(L, 6);
+	unsigned int color = lua_isnoneornil(L, 7) ? 0 : (unsigned int)luaL_checknumber(L, 7);
+
+	bool flip_x = lua_toboolean(L, 8);
+	bool flip_y = lua_toboolean(L, 9);
+	PutBitmap3Alpha(&csvanilla::grcFull, x, y, rect, surface, alpha, angle, color, flip_x, flip_y);
 
 	return 0;
 }

@@ -26,8 +26,7 @@ std::vector<FONT_DATA> LoadFontDataFromYAML(const char* yamlPath)
     }
     catch (const YAML::Exception& e)
     {
-        // Handle YAML parsing errors
-        // You can print an error message or take other appropriate action
+        
     }
 
     return font_data;
@@ -36,12 +35,11 @@ std::vector<FONT_DATA> LoadFontDataFromYAML(const char* yamlPath)
 FONT_DATA GetFirstFontData(const std::vector<FONT_DATA>& font_data)
 {
     FONT_DATA empty_font_data;
-    // Initialize empty_font_data with default values or handle the error differently
-    // For example:
-    empty_font_data.name[0] = '\0'; // Empty string for the name
-    empty_font_data.filename[0] = '\0'; // Empty string for the filename
-    empty_font_data.x_scaling = 0; // Default value for scaling
-    empty_font_data.y_scaling = 0; // Default value for scaling
+    // Init font first
+    empty_font_data.name[0] = '\0';
+    empty_font_data.filename[0] = '\0';
+    empty_font_data.x_scaling = 0;
+    empty_font_data.y_scaling = 0;
 
     if (!font_data.empty()) {
         return font_data.front();

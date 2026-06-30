@@ -382,21 +382,25 @@ void PutBitmap4(const RECT* rcView, int x, int y, const RECT* rect, int surf_no)
 	PutBitmap(rcView, x, y, rect, surf_no, false);
 }
 
-void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint32 color)
+void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint32 color, bool flip_x, bool flip_y)
 {
 	if (renderer == nullptr)
 		return;
 
 	RECT rcWork = *rect;
+
 	if (x + rect->right - rect->left > rcView->right)
 		rcWork.right -= (x + rect->right - rect->left) - rcView->right;
+
 	if (x < rcView->left)
 	{
 		rcWork.left += rcView->left - x;
 		x = rcView->left;
 	}
+
 	if (y + rect->bottom - rect->top > rcView->bottom)
 		rcWork.bottom -= (y + rect->bottom - rect->top) - rcView->bottom;
+
 	if (y < rcView->top)
 	{
 		rcWork.top += rcView->top - y;
@@ -407,30 +411,57 @@ void PutBitmap3A(const RECT* rcView, int x, int y, const RECT* rect, int surf_no
 	rcWork *= mag;
 
 	RenderBackend::Surface& surface = renderer->surf[surf_no];
+
 	if (surface.texture == nullptr)
 		return;
 
 	SDL_SetTextureBlendMode(surface.texture, SDL_BLENDMODE_BLEND);
-
 	SDL_SetTextureAlphaMod(surface.texture, alpha);
 
-	// Apply tinting only if the color is not black (0, 0, 0)
+	// Apply tinting only if the color is not black
 	if ((color >> 16 & 0xFF) != 0 || (color >> 8 & 0xFF) != 0 || (color & 0xFF) != 0)
 	{
-		SDL_SetTextureColorMod(surface.texture, color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF);
+		SDL_SetTextureColorMod(
+			surface.texture,
+			(color >> 16) & 0xFF,
+			(color >> 8) & 0xFF,
+			color & 0xFF
+		);
 	}
 
-	// Calculate the center point of the rectangle for rotation
 	SDL_Point center = {
 		(rcWork.right - rcWork.left) / 2,
 		(rcWork.bottom - rcWork.top) / 2
 	};
 
 	SDL_Rect sourceRect = RECT2SDL_Rect(rcWork);
-	SDL_Rect destinationRect = { x * mag, y * mag, sourceRect.w, sourceRect.h };
+
+	SDL_Rect destinationRect = {
+		x * mag,
+		y * mag,
+		sourceRect.w,
+		sourceRect.h
+	};
+
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+
+	if (flip_x)
+		flip = (SDL_RendererFlip)(flip | SDL_FLIP_HORIZONTAL);
+
+	if (flip_y)
+		flip = (SDL_RendererFlip)(flip | SDL_FLIP_VERTICAL);
 
 	SDL_SetRenderTarget(renderer->renderer, renderer->framebuffer.texture);
-	SDL_RenderCopyEx(renderer->renderer, surface.texture, &sourceRect, &destinationRect, angle, &center, SDL_FLIP_NONE);
+
+	SDL_RenderCopyEx(
+		renderer->renderer,
+		surface.texture,
+		&sourceRect,
+		&destinationRect,
+		angle,
+		&center,
+		flip
+	);
 
 	SDL_SetTextureAlphaMod(surface.texture, SDL_ALPHA_OPAQUE);
 	SDL_SetTextureColorMod(surface.texture, 255, 255, 255);

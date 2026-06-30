@@ -53,9 +53,9 @@ const Uint8* Get_SDL_KeyboardState()
 	return SDL_GetKeyboardState(NULL);
 }
 
-void PutBitmap3Alpha(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint32 color)
+void PutBitmap3Alpha(const RECT* rcView, int x, int y, const RECT* rect, int surf_no, Uint8 alpha, double angle, Uint32 color, bool flip_x, bool flip_y)
 {
-	PutBitmap3A(rcView, x, y, rect, surf_no, alpha, angle, color);
+	PutBitmap3A(rcView, x, y, rect, surf_no, alpha, angle, color, flip_x, flip_y);
 }
 
 void PutMax2x2Api(const RECT* src, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3, int surf_no, Uint32 color, Uint8 alpha)
